@@ -277,7 +277,9 @@
 
         select.className = 'lightpick__select lightpick__select-months';
 
-        if (!disableSelect) {
+        if (disableSelect) {
+            select.innerText = d.toDate().toLocaleString(opts.lang, { month: 'long' });
+        } else {
             for (var idx = 0; idx < 12; idx++) {
                 d.set('month', idx);
 
@@ -304,7 +306,9 @@
         var disableSelect = (!opts.dropdowns || !opts.dropdowns.years);
         var select = document.createElement(disableSelect ? 'div' : 'select');
 
-        if (!disableSelect) {
+        if (disableSelect) {
+            select.innerText = d.toDate().getFullYear();
+        } else {
             var years = opts.dropdowns && opts.dropdowns.years ? opts.dropdowns.years : null;
             var minYear = years && years.min ? years.min : 1900;
             var maxYear = years && years.max ? years.max : Number.parseInt(moment().format('YYYY'));
