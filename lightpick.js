@@ -109,7 +109,7 @@
         return new Date(1970, 0, day).toLocaleString(opts.lang, { weekday: short ? 'short' : 'long' })
     },
 
-    renderDay = function(opts, date, dummy, extraClass)
+    renderDay = function(opts, date, dummy, extraClass, innerHtml)
     {
         if (dummy) return '<div></div>';
 
@@ -263,7 +263,13 @@
             dateEl.setAttribute('type', 'button');
         }
         dateEl.className = day.className.join(' ');
-        dateEl.innerHTML = date.get('date');
+        // Maintain current state of date in some additional html text has been inserted
+        if (typeof innerHtml === 'string') {
+            dateEl.innerHTML = innerHtml;
+        } else {
+            // Set current element date
+            dateEl.innerHTML = date.get('date');
+        }
         dateEl.setAttribute('data-time', day.time);
 
         return dateEl.outerHTML;
@@ -418,7 +424,11 @@
     {
         var days = el.querySelectorAll('.lightpick__day');
         [].forEach.call(days, function(day) {
-            day.outerHTML = renderDay(opts, parseInt(day.getAttribute('data-time')), false, day.className.split(' '));
+            var innerHtml = undefined;
+            if (day.childNodes.length > 1) {
+                innerHtml = day.innerHTML; // Some more elements are present inside date element
+            }
+            day.outerHTML = renderDay(opts, parseInt(day.getAttribute('data-time')), false, day.className.split(' '), innerHtml);
         });
 
         checkDisabledDatesInRange(el, opts);
