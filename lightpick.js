@@ -41,6 +41,7 @@
         endDate: null,
         minDate: null,
         maxDate: null,
+        skip: null,
         disableDates: null,
         selectForward: false,
         selectBackward: false,
@@ -1019,7 +1020,10 @@
 
         prevMonth: function()
         {
-            this._opts.calendar[0] = moment(this._opts.calendar[0]).subtract(this._opts.numberOfMonths, 'month');
+            var skip = this._opts.skip;
+            var numberOfMonths = this._opts.numberOfMonths;
+            var skipMonths = typeof skip === 'number' && skip > 0 && skip <= numberOfMonths ? skip : numberOfMonths;
+            this._opts.calendar[0] = moment(this._opts.calendar[0]).subtract(skipMonths, 'month');
 
             renderCalendar(this.el, this._opts);
 
@@ -1028,7 +1032,10 @@
 
         nextMonth: function()
         {
-            this._opts.calendar[0] = moment(this._opts.calendar[1]);
+            var skip = this._opts.skip;
+            var numberOfMonths = this._opts.numberOfMonths;
+            var skipMonths = typeof skip === 'number' && skip > 0 && skip <= numberOfMonths ? skip : numberOfMonths;
+            this._opts.calendar[0] = moment(this._opts.calendar[0].add(skipMonths, 'month'));
 
             renderCalendar(this.el, this._opts);
 
